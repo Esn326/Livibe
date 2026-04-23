@@ -1,0 +1,34 @@
+[
+    {
+        "id": 1,
+        "title": "2026 台北跨年祭 (Taipei New Year Eve)",
+        "artist": "霓虹樂團 (Neon Band)",
+        "date_range": "2026-12-31",
+        "location": "Taipei, Taiwan",
+        "venue": "台北小巨蛋 (Taipei Arena)",
+        "poster_url": "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?auto=format&fit=crop&w=800&q=80",
+        "ticket_url": "https://tixcraft.com",
+        "description": "這是一場震撼心靈的現場體驗，融合了頂尖的視覺燈光效果與音響設備。作為年度壓軸，這場演出定義了 2026 年的現場水準。這不僅僅是一場演唱會，更是一場感官的洗禮。",
+        "avg_score": 9.2,
+        "reviews": [
+            {
+                "user_id": "RockFans_01",
+                "score_stage": 10,
+                "score_content": 9,
+                "score_vibe": 9,
+                "visit_date": "2026/12/31",
+                "seat_zone": "A區 1排",
+                "comment_text": "音響效果太炸了！舞台設計非常前衛，是我看過最棒的現場。"
+            },
+            {
+                "user_id": "IndieLover",
+                "score_stage": 8,
+                "score_content": 10,
+                "score_vibe": 8,
+                "visit_date": "2026/12/31",
+                "seat_zone": "看台 B區",
+                "comment_text": "主唱聲音狀態極佳，選曲驚喜連連！"
+            }
+        ]
+    }
+]
