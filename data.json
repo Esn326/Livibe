@@ -1,33 +1,64 @@
 [
     {
-        "id": 1,
-        "title": "2026 台北跨年祭 (Taipei New Year Eve)",
-        "artist": "霓虹樂團 (Neon Band)",
-        "date_range": "2026-12-31",
-        "location": "Taipei, Taiwan",
-        "venue": "台北小巨蛋 (Taipei Arena)",
-        "poster_url": "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?auto=format&fit=crop&w=800&q=80",
+        "id": 101,
+        "title": "Coldplay: Music of the Spheres World Tour",
+        "artist": "Coldplay (酷玩樂團)",
+        "date_range": "2023-11-11",
+        "location": "Kaohsiung, Taiwan",
+        "venue": "高雄國家體育場 (世運主場館)",
+        "poster_url": "https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?q=80&w=1000",
         "ticket_url": "https://tixcraft.com",
-        "description": "這是一場震撼心靈的現場體驗，融合了頂尖的視覺燈光效果與音響設備。作為年度壓軸，這場演出定義了 2026 年的現場水準。這不僅僅是一場演唱會，更是一場感官的洗禮。",
-        "avg_score": 9.2,
+        "description": "Coldplay 睽違多年再次登台，帶領高雄世運主場館進入璀璨的星際世界。本次演出強調環保永續，全場發放 LED 手環，視覺效果震撼全球。",
+        "avg_score": 9.8,
         "reviews": [
             {
-                "user_id": "RockFans_01",
-                "score_stage": 10,
-                "score_content": 9,
-                "score_vibe": 9,
-                "visit_date": "2026/12/31",
-                "seat_zone": "A區 1排",
-                "comment_text": "音響效果太炸了！舞台設計非常前衛，是我看過最棒的現場。"
-            },
+                "user_id": "FixYou_Fans",
+                "score_stage": 10, "score_content": 10, "score_vibe": 10,
+                "visit_date": "2023/11/11",
+                "seat_zone": "搖滾 A 區",
+                "comment_text": "這輩子一定要看一次的演唱會！全場大合唱 Fix You 的時候真的哭了。"
+            }
+        ]
+    },
+    {
+        "id": 102,
+        "title": "BLACKPINK [BORN PINK] WORLD TOUR",
+        "artist": "BLACKPINK",
+        "date_range": "2023-03-18",
+        "location": "Kaohsiung, Taiwan",
+        "venue": "高雄國家體育場 (世運主場館)",
+        "poster_url": "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=1000",
+        "ticket_url": "https://tixcraft.com",
+        "description": "K-POP 女王 BLACKPINK 首度挑戰高雄世運主場館，吸引近 5 萬名粉絲朝聖，掀起全台粉紅風暴。",
+        "avg_score": 9.0,
+        "reviews": [
             {
-                "user_id": "IndieLover",
-                "score_stage": 8,
-                "score_content": 10,
-                "score_vibe": 8,
-                "visit_date": "2026/12/31",
-                "seat_zone": "看台 B區",
-                "comment_text": "主唱聲音狀態極佳，選曲驚喜連連！"
+                "user_id": "BP_Blink",
+                "score_stage": 9, "score_content": 8, "score_vibe": 10,
+                "visit_date": "2023/03/18",
+                "seat_zone": "VIP 區",
+                "comment_text": "現場能量太強了！女孩們的魅力真的沒話說。"
+            }
+        ]
+    },
+    {
+        "id": 103,
+        "title": "Ed Sheeran +-=÷x Tour",
+        "artist": "Ed Sheeran (紅髮艾德)",
+        "date_range": "2024-02-03",
+        "location": "Kaohsiung, Taiwan",
+        "venue": "高雄國家體育場 (世運主場館)",
+        "poster_url": "https://images.unsplash.com/photo-1514525253361-bee8718a300a?q=80&w=1000",
+        "ticket_url": "https://kktix.com",
+        "description": "紅髮艾德帶著他標誌性的 Loop Station 來到高雄，一個人就是一整支樂隊，完美展現頂尖創作才子的現場實力。",
+        "avg_score": 9.5,
+        "reviews": [
+            {
+                "user_id": "Sheeranite",
+                "score_stage": 9, "score_content": 10, "score_vibe": 9,
+                "visit_date": "2024/02/03",
+                "seat_zone": "看台區",
+                "comment_text": "純粹的音樂享受，紅髮艾德的唱功比 CD 還好聽！"
             }
         ]
     }

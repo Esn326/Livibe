@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>LIVIBE | 管理員後台</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .admin-form { background: var(--bg-card); padding: 30px; border-radius: 8px; margin-top: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; color: var(--text-muted); margin-bottom: 5px; }
+        input, textarea { width: 100%; padding: 10px; background: #121212; border: 1px solid #333; color: white; border-radius: 4px; }
+        .json-output { background: #000; color: #00FF88; padding: 20px; margin-top: 20px; white-space: pre-wrap; font-family: monospace; border: 1px dashed var(--brand-main); }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="index.html" class="logo-box">LIVIBE</a>
+        <span style="margin-left: 20px; color: var(--brand-main);">歷史資料錄入系統</span>
+    </nav>
+
+    <div class="container">
+        <div class="admin-form">
+            <h2>新增演唱會資料 (2023-2026)</h2>
+            <div class="form-group">
+                <label>演唱會名稱</label>
+                <input type="text" id="title" placeholder="例如：Jay Chou Carnival World Tour">
+            </div>
+            <div class="form-group">
+                <label>藝人/團體</label>
+                <input type="text" id="artist">
+            </div>
+            <div class="form-group">
+                <label>日期 (YYYY-MM-DD)</label>
+                <input type="text" id="date">
+            </div>
+            <div class="form-group">
+                <label>場館</label>
+                <input type="text" id="venue">
+            </div>
+            <div class="form-group">
+                <label>海報圖片網址</label>
+                <input type="text" id="poster_url">
+            </div>
+            <div class="form-group">
+                <label>演出介紹</label>
+                <textarea id="description" rows="4"></textarea>
+            </div>
+            <button onclick="generateJSON()" style="background:var(--brand-main); color:black; border:none; padding:10px 20px; font-weight:bold; cursor:pointer;">生成 JSON 程式碼</button>
+        </div>
+
+        <div id="outputSection" style="display:none;">
+            <h3>複製以下內容到 data.json 的 [ ] 之中：</h3>
+            <div class="json-output" id="jsonOutput"></div>
+        </div>
+    </div>
+
+    <script>
+        function generateJSON() {
+            const data = {
+                id: Date.now(), // 隨機生成 ID
+                title: document.getElementById('title').value,
+                artist: document.getElementById('artist').value,
+                date_range: document.getElementById('date').value,
+                location: "Taiwan",
+                venue: document.getElementById('venue').value,
+                poster_url: document.getElementById('poster_url').value,
+                ticket_url: "#",
+                description: document.getElementById('description').value,
+                avg_score: 0.0,
+                reviews: []
+            };
+
+            document.getElementById('jsonOutput').innerText = JSON.stringify(data, null, 4) + ",";
+            document.getElementById('outputSection').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
