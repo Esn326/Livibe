@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>LIVIBE | Setlist.fm 資料抓取器</title>
+    <style>
+        body { font-family: sans-serif; background: #121212; color: white; padding: 40px; }
+        .controls { background: #1e1e1e; padding: 20px; border-radius: 8px; border: 1px solid #333; }
+        input, select, button { padding: 10px; margin: 5px; border-radius: 4px; border: 1px solid #444; }
+        button { background: #00FF88; color: black; font-weight: bold; cursor: pointer; }
+        #log { margin-top: 20px; color: #888; font-size: 0.9rem; height: 100px; overflow-y: auto; background: #000; padding: 10px; }
+        pre { background: #000; color: #00FF88; padding: 20px; border-radius: 8px; white-space: pre-wrap; word-wrap: break-word; }
+    </style>
+</head>
+<body>
+    <h1>LIVIBE Data Crawler</h1>
+    <div class="controls">
+        <input type="text" id="apiKey" placeholder="貼上 API Key" value="990AnMyDMx2yyaxXpEVxzO5VtJSG3b6_JLnI" style="width: 300px;">
+        <select id="year">
+            <option value="2023">2023</option>
+            <option value="2024">2024</option>
+            <option value="2025" selected>2025</option>
+            <option value="2026">2026</option>
+        </select>
+        <button onclick="fetchData()">開始抓取台灣演唱會</button>
+    </div>
+
+    <div id="log">系統日誌：等待操作...</div>
+    
+    <h3>產出的 JSON 內容 (請複製到 data.json):</h3>
+    <button onclick="copyJson()">一鍵複製內容</button>
+    <pre id="output">尚未產生資料</pre>
+
+    <script>
+        async function fetchData() {
+            const key = document.getElementById('apiKey').value;
+            const year = document.getElementById('year').value;
+            const log = document.getElementById('log');
+            const output = document.getElementById('output');
+            
+            log.innerHTML += `<div>正在抓取 ${year} 年台灣資料...</div>`;
+            
+            try {
+                const response = await fetch(`https://api.setlist.fm/rest/1.0/search/setlists?countryCode=TW&year=${year}`, {
+                    headers: {
+                        "Accept": "application/json",
+                        "x-api-key": key
+                    }
+                });
+
+                if (!response.ok) throw new Error("API 回傳錯誤，請檢查金鑰是否正確");
+
+                const data = await response.json();
+                const setlists = data.setlist || [];
+                
+                // 轉換格式
+                const formattedData = setlists.map(s => ({
+                    id: s.id,
+                    title: `${s.artist.name} ${s.tour ? s.tour.name : 'Concert'}`,
+                    artist: s.artist.name,
+                    date_range: s.eventDate,
+                    location: s.venue.city.name,
+                    venue: s.venue.name,
+                    poster_url: "https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?q=80&w=1000", // 預設圖
+                    ticket_url: "#",
+                    description: `於 ${s.venue.name} (${s.venue.city.name}) 舉行的現場演出。來源：Setlist.fm`,
+                    avg_score: 0.0,
+                    reviews: []
+                }));
+
+                output.innerText = JSON.stringify(formattedData, null, 4);
+                log.innerHTML += `<div style="color:#00FF88">成功抓取 ${formattedData.length} 筆資料！</div>`;
+
+            } catch (err) {
+                log.innerHTML += `<div style="color:red">錯誤: ${err.message}</div>`;
+            }
+        }
+
+        function copyJson() {
+            const text = document.getElementById('output').innerText;
+            navigator.clipboard.writeText(text);
+            alert("已複製到剪貼簿！");
+        }
+    </script>
+</body>
+</html>
