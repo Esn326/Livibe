@@ -1,87 +1,81 @@
-:root {
-    --imdb-black: #000000;
-    --imdb-dark: #121212;
-    --imdb-yellow: #f5c518;
-    --imdb-gray: #1a1a1a;
-    --text-main: #ffffff;
-    --text-muted: #b3b3b3;
-}
-
+/* 全域 IMDB 深色設定 */
 body {
-    background-color: var(--imdb-black);
-    color: var(--text-main);
-    font-family: 'Roboto', 'PingFang TC', sans-serif;
+    font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+    background-color: #000000;
     margin: 0;
+    color: #ffffff;
 }
 
 header {
-    background-color: var(--imdb-gray);
-    padding: 20px;
-    border-bottom: 1px solid #333;
+    background: #1a1a1a;
+    color: #f5c518; /* IMDB 黃 */
+    padding: 2rem;
     text-align: center;
+    border-bottom: 1px solid #333;
 }
 
-h1 { color: var(--imdb-yellow); margin: 0; font-size: 2.5rem; }
-
-/* 排序控制列 */
+/* 排序按鈕樣式 */
 .control-panel {
     display: flex;
     justify-content: center;
     padding: 20px;
-    background: var(--imdb-black);
 }
 
 .sort-group {
     display: flex;
     gap: 10px;
     align-items: center;
+    background: #1a1a1a;
+    padding: 10px 20px;
+    border-radius: 8px;
 }
 
 .sort-btn {
     background: #333;
     color: white;
     border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
+    padding: 8px 15px;
     cursor: pointer;
+    border-radius: 4px;
     font-weight: bold;
-    transition: 0.3s;
 }
 
-.sort-btn:hover { background: #444; }
-
 .sort-btn.active {
-    background: var(--imdb-yellow);
+    background: #f5c518;
     color: black;
 }
 
-/* 網格佈局 */
+/* 網格與卡片 (保留原本動畫) */
 .concert-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
 }
 
-/* 卡片設計 - 重點在此 */
 .concert-card {
-    background: var(--imdb-gray);
-    border-radius: 8px;
+    background: #1a1a1a;
+    border-radius: 10px;
     overflow: hidden;
     transition: 0.3s;
-    cursor: pointer;
-    border: 1px solid #222;
+    border: 1px solid #333;
 }
 
-.concert-card:hover { transform: translateY(-5px); border-color: var(--imdb-yellow); }
+.concert-card:hover {
+    transform: translateY(-10px);
+    border-color: #f5c518;
+}
 
-.poster-wrapper { width: 100%; height: 350px; }
-.poster-wrapper img { width: 100%; height: 100%; object-fit: cover; }
+.poster-wrapper img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+}
 
 .info { padding: 15px; }
-.location-tag { color: var(--imdb-yellow); font-size: 0.8rem; font-weight: bold; }
-h3 { margin: 10px 0 5px 0; font-size: 1.1rem; }
-.venue { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 10px; }
-.date-box { font-size: 0.85rem; color: var(--imdb-yellow); }
+.location-tag { color: #f5c518; font-weight: bold; font-size: 0.8rem; }
+h3 { margin: 10px 0; }
+.venue { color: #b3b3b3; }
+.date-box { color: #f5c518; margin-top: 10px; }
