@@ -1,69 +1,59 @@
 let allConcerts = [];
 
-document.addEventListener('DOMContentLoaded', function() {
-    const container = document.getElementById('concert-container');
-
-    // 1. 載入資料
-    fetch('data_2024_final.json') // 請確保檔名與 Python 輸出一致
-        .then(response => response.json())
+document.addEventListener('DOMContentLoaded', () => {
+    // 💡 改回 data.json
+    fetch('data.json')
+        .then(res => {
+            if (!res.ok) throw new Error("找不到 data.json");
+            return res.json();
+        })
         .then(data => {
             allConcerts = data;
-            // 預設依時間排序
-            sortAndRender('date');
+            renderList(executeSort(allConcerts, 'date'));
         })
-        .catch(error => {
-            console.error('Error loading data:', error);
-            container.innerHTML = '<p>載入資料時發生錯誤。</p>';
+        .catch(err => {
+            console.error(err);
+            document.getElementById('concert-container').innerHTML = "<p>資料載入中或檔案遺失...</p>";
         });
 
-    // 2. 綁定排序按鈕事件 (透過 index.html 的按鈕)
-    const sortButtons = document.querySelectorAll('.sort-btn');
-    sortButtons.forEach(btn => {
-        btn.addEventListener('click', function() {
-            // 切換 Active 樣式
-            sortButtons.forEach(b => b.classList.remove('active'));
-            this.classList.add('active');
-            
-            const sortBy = this.getAttribute('data-sort');
-            sortAndRender(sortBy);
+    // 監聽按鈕
+    document.querySelectorAll('.sort-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const sorted = executeSort(allConcerts, btn.dataset.sort);
+            renderList(sorted);
         });
     });
 });
 
-// 3. 排序並渲染函數
-function sortAndRender(criteria) {
-    let sortedData = [...allConcerts];
-
-    if (criteria === 'artist') {
-        // 依藝人 A-Z
-        sortedData.sort((a, b) => a.artist.localeCompare(b.artist, 'zh-Hant'));
-    } else if (criteria === 'date') {
-        // 依 ISO 日期 (最新在前)
-        sortedData.sort((a, b) => new Date(b.iso_date) - new Date(a.iso_date));
-    } else if (criteria === 'location') {
-        // 依地區
-        sortedData.sort((a, b) => a.location.localeCompare(b.location, 'zh-Hant'));
+function executeSort(data, type) {
+    let result = [...data];
+    if (type === 'artist') {
+        result.sort((a, b) => a.artist.localeCompare(b.artist, 'zh-Hant'));
+    } else if (type === 'date') {
+        // 使用 iso_date 確保排序精準
+        result.sort((a, b) => new Date(b.iso_date || 0) - new Date(a.iso_date || 0));
+    } else if (type === 'location') {
+        result.sort((a, b) => a.location.localeCompare(b.location, 'zh-Hant'));
     }
-
-    renderConcerts(sortedData);
+    return result;
 }
 
-function renderConcerts(data) {
+function renderList(data) {
     const container = document.getElementById('concert-container');
     if (!container) return;
 
-    container.innerHTML = data.map(concert => `
-        <div class="concert-card" onclick="window.location.href='concert.html?id=${concert.id}'">
+    container.innerHTML = data.map(item => `
+        <div class="concert-card" onclick="location.href='concert.html?id=${item.id}'">
             <div class="poster-wrapper">
-                <img src="${concert.poster_url}" alt="${concert.artist}" loading="lazy">
+                <img src="${item.poster_url}" alt="${item.artist}">
             </div>
             <div class="info">
-                <span class="location-tag">${concert.location}</span>
-                <h3>${concert.artist}</h3>
-                <p class="venue">${concert.venue}</p>
-                <div class="date-box">
-                    <span>📅 ${concert.date_range}</span>
-                </div>
+                <div class="location-tag">${item.location}</div>
+                <h3>${item.artist}</h3>
+                <p class="venue">${item.venue}</p>
+                <div class="date-box">📅 ${item.date_range}</div>
             </div>
         </div>
     `).join('');

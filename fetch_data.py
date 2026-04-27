@@ -121,7 +121,7 @@ def main():
             print(f"❌ 錯誤: {e}"); break
 
     # 存檔
-    output_name = f'data_{YEAR}_final.json'
+        output_name = 'data.json'
     with open(output_name, 'w', encoding='utf-8') as f:
         json.dump(all_formatted_list, f, ensure_ascii=False, indent=4)
     
