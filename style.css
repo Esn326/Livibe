@@ -1,81 +1,45 @@
-/* 全域 IMDB 深色設定 */
-body {
-    font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif;
-    background-color: #000000;
-    margin: 0;
-    color: #ffffff;
-}
-
-header {
+/* 你的原本風格設定 */
+.navbar {
     background: #1a1a1a;
-    color: #f5c518; /* IMDB 黃 */
-    padding: 2rem;
-    text-align: center;
+    padding: 15px 50px;
+    display: flex;
+    align-items: center;
     border-bottom: 1px solid #333;
 }
 
-/* 排序按鈕樣式 */
+.logo-box {
+    color: #f5c518; /* IMDB 黃 */
+    font-size: 1.8rem;
+    font-weight: 900;
+    text-decoration: none;
+    letter-spacing: 1px;
+}
+
+/* 排序控制列美化 */
 .control-panel {
     display: flex;
     justify-content: center;
-    padding: 20px;
+    margin: 20px 0;
 }
 
 .sort-group {
+    background: #1a1a1a;
+    padding: 8px 16px;
+    border-radius: 4px;
+    border: 1px solid #333;
     display: flex;
     gap: 10px;
-    align-items: center;
-    background: #1a1a1a;
-    padding: 10px 20px;
-    border-radius: 8px;
 }
 
 .sort-btn {
-    background: #333;
-    color: white;
+    background: transparent;
+    color: #fff;
     border: none;
-    padding: 8px 15px;
+    padding: 5px 15px;
     cursor: pointer;
-    border-radius: 4px;
     font-weight: bold;
 }
 
 .sort-btn.active {
-    background: #f5c518;
-    color: black;
+    color: #f5c518;
 }
-
-/* 網格與卡片 (保留原本動畫) */
-.concert-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 25px;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-.concert-card {
-    background: #1a1a1a;
-    border-radius: 10px;
-    overflow: hidden;
-    transition: 0.3s;
-    border: 1px solid #333;
-}
-
-.concert-card:hover {
-    transform: translateY(-10px);
-    border-color: #f5c518;
-}
-
-.poster-wrapper img {
-    width: 100%;
-    height: 400px;
-    object-fit: cover;
-}
-
-.info { padding: 15px; }
-.location-tag { color: #f5c518; font-weight: bold; font-size: 0.8rem; }
-h3 { margin: 10px 0; }
-.venue { color: #b3b3b3; }
-.date-box { color: #f5c518; margin-top: 10px; }
