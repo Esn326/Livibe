@@ -1,80 +1,197 @@
-:root {
-    --brand-main: #00E5FF;
-    --bg-black: #080808;
-    --bg-dark: #121212;
-    --bg-card: #1f1f1f;
-    --text-main: #ffffff;
-    --text-muted: #a3a3a3;
-    --border: 1px solid #2a2a2a;
+/* 全域設定 */
+* {
+    box-sizing: border-box;
 }
 
 body {
-    background-color: var(--bg-black);
-    color: var(--text-main);
-    font-family: 'Inter', -apple-system, sans-serif;
+    font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+    background-color: #f4f7f6;
     margin: 0;
-    line-height: 1.6;
+    color: #333;
 }
 
-.container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+header {
+    background: linear-gradient(135deg, #1a1a1a 0%, #333 100%);
+    color: white;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
 
-/* Navbar */
-.navbar {
-    background: var(--bg-dark);
-    height: 65px;
+/* 排序控制列 */
+.control-panel {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+
+.sort-group {
+    display: flex;
+    gap: 12px;
+    background: #fff;
+    padding: 10px 20px;
+    border-radius: 50px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.sort-label {
+    font-weight: bold;
+    color: #666;
+    align-self: center;
+}
+
+.sort-btn {
+    padding: 8px 20px;
+    border: 2px solid #eee;
+    background: white;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.sort-btn:hover {
+    border-color: #007bff;
+    color: #007bff;
+}
+
+.sort-btn.active {
+    background: #007bff;
+    color: white;
+    border-color: #007bff;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+}
+
+/* 演唱會網格佈局 */
+.concert-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px 50px;
+}
+
+/* 卡片與圖片樣式 */
+.concert-card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.concert-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.12);
+}
+
+.poster-wrapper {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    overflow: hidden;
+}
+
+.poster-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* 文字資訊區 */
+.info {
+    padding: 20px;
+}
+
+.location-tag {
+    background: #f0f3ff;
+    color: #007bff;
+    font-size: 0.75rem;
+    font-weight: bold;
+    padding: 4px 12px;
+    border-radius: 6px;
+    display: inline-block;
+    margin-bottom: 10px;
+}
+
+h3 {
+    margin: 5px 0;
+    font-size: 1.25rem;
+    color: #222;
+    /* 避免標題太長擠壓佈局 */
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.venue {
+    color: #777;
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+}
+
+.date-box {
+    border-top: 1px solid #eee;
+    padding-top: 15px;
+    color: #007bff;
+    font-weight: 600;
     display: flex;
     align-items: center;
-    padding: 0 40px;
-    border-bottom: var(--border);
-    position: sticky; top: 0; z-index: 100;
+    gap: 5px;
 }
 
-.logo-box {
-    background: var(--brand-main);
-    color: black;
-    padding: 4px 12px;
-    border-radius: 4px;
-    font-weight: 800;
-    text-decoration: none;
-    font-size: 1.2rem;
+/* 手機版適應 */
+@media (max-width: 600px) {
+    .control-panel {
+        flex-direction: column;
+    }
+    .sort-group {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .poster-wrapper {
+        height: 300px;
+    }
 }
 
-/* Hero Section */
-.hero-header { background: linear-gradient(to bottom, #1a1a1a, var(--bg-black)); padding: 60px 0; }
-.hero-title { font-size: 3rem; margin-bottom: 20px; font-weight: 700; }
-.search-bar {
-    width: 100%; max-width: 600px; padding: 15px 25px;
-    background: var(--bg-card); border: var(--border);
-    border-radius: 30px; color: white; font-size: 1.1rem; outline: none;
-}
-.search-bar:focus { border-color: var(--brand-main); }
-
-/* Concert Grid */
-.concert-grid {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 30px; padding: 40px 0;
+.filter-controls {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 0 20px;
 }
 
-.concert-card {
-    background: var(--bg-card); border-radius: 8px; overflow: hidden;
-    transition: transform 0.3s; cursor: pointer; border: var(--border);
+.sort-group {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    background: white;
+    padding: 10px 20px;
+    border-radius: 50px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
-.concert-card:hover { transform: translateY(-10px); border-color: var(--brand-main); }
-.card-img { width: 100%; height: 300px; object-fit: cover; }
-.card-body { padding: 15px; }
 
-/* Detail Page Layout */
-.detail-hero { background: var(--bg-dark); padding: 40px 0; border-bottom: var(--border); }
-.score-circle { border-left: 1px solid #333; padding-left: 30px; text-align: center; }
-.score-num { font-size: 3rem; color: var(--brand-main); font-weight: 800; display: block; }
+.sort-btn {
+    padding: 6px 16px;
+    border: 1px solid #eee;
+    background: #fff;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
 
-.main-layout { display: grid; grid-template-columns: 320px 1fr; gap: 50px; margin-top: 40px; }
-.poster-sticky { position: sticky; top: 100px; width: 100%; border-radius: 8px; box-shadow: 0 10px 40px rgba(0,0,0,0.6); }
+.sort-btn:hover {
+    border-color: #007bff;
+}
 
-.info-row { border-bottom: var(--border); padding: 18px 0; display: flex; }
-.info-label { width: 140px; color: var(--text-muted); font-weight: 600; }
-.info-value { color: var(--brand-main); text-decoration: none; }
-
-/* Review Cards */
-.review-card { background: var(--bg-card); padding: 25px; border-radius: 8px; margin-bottom: 20px; border: var(--border); }
-.admin-login-link { background: transparent; border: 1px solid #333; color: #555; cursor: pointer; padding: 5px 10px; border-radius: 4px; margin-left: 20px; }
+.sort-btn.active {
+    background: #007bff;
+    color: white;
+    border-color: #007bff;
+}

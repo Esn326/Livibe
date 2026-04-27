@@ -3,28 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LIVIBE | 專業演唱會評價資料庫</title>
+    <title>LIVIBE - 演唱會評價平台</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <nav class="navbar">
-        <a href="index.html" class="logo-box">LIVIBE</a>
-        <div class="nav-links">
-            <button id="adminBtn" class="admin-login-link">Admin Access</button>
-        </div>
-    </nav>
 
-    <div class="hero-header">
-        <div class="container">
-            <h1 class="hero-title">發現震撼現場</h1>
-            <input type="text" id="searchInput" class="search-bar" placeholder="搜尋藝人、場館或演唱會...">
-        </div>
+<header>
+    <h1>LIVIBE</h1>
+    <p>發現台灣最精彩的現場演出</p>
+</header>
+
+<div class="filter-controls">
+    <div class="sort-group">
+        <span class="sort-label">排序依據：</span>
+        <button class="sort-btn active" data-sort="date">演出時間</button>
+        <button class="sort-btn" data-sort="artist">藝人名稱</button>
+        <button class="sort-btn" data-sort="location">場地地區</button>
+    </div>
+</div>
+
+<div id="concert-container" class="concert-grid">
     </div>
 
-    <main class="container">
-        <div class="concert-grid" id="concertGrid"></div>
-    </main>
+<div id="concert-grid" class="concert-grid">
+    <p style="text-align: center; grid-column: 1/-1;">正在尋找演出資料...</p>
+</div>
 
-    <script src="main.js"></script>
+<script src="app.js"></script> 
 </body>
 </html>
