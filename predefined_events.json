@@ -1,0 +1,11 @@
+[
+  { "date": "2024-03-22", "venue_keyword": "Dream Mall", "official_name": "2024 高雄櫻花季", "tag": "festival" },
+  { "date": "2024-03-30", "venue_keyword": "Pier-2", "official_name": "2024 大港開唱 Megaport Festival", "tag": "festival" },
+  { "date": "2024-04-04", "venue_keyword": "Kenting", "official_name": "2024 台灣祭 Taiwan Music Festival", "tag": "festival" },
+  { "date": "2024-07-05", "venue_keyword": "Dream Mall", "official_name": "2024 高雄啤酒音樂節", "tag": "festival" },
+  { "date": "2024-08-03", "venue_keyword": "Taipei Dome", "official_name": "2024 職棒 G-POP 棒球週", "tag": "variety" },
+  { "date": "2024-12-31", "venue_keyword": "City Hall", "official_name": "2025 臺北最High新年城跨年晚會", "tag": "festival" },
+  { "date": "2025-02-22", "venue_keyword": "Chingshui", "official_name": "2025 浮現祭 Emerge Fest", "tag": "festival" },
+  { "date": "2025-03-29", "venue_keyword": "Pier-2", "official_name": "2025 大港開唱 Megaport Festival", "tag": "festival" },
+  { "date": "2026-03-28", "venue_keyword": "Pier-2", "official_name": "2026 大港開唱 Megaport Festival", "tag": "festival" }
+]

@@ -1,133 +1,101 @@
-import requests
-import json
-import time
-import sys
-import io
-import re
+import requests, json, time, re, random
 from datetime import datetime
-from urllib.parse import quote
+from tqdm import tqdm
 
-# 🛠️ 1. 環境設定
-sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
-
-# === 參數設定 ===
 SETLIST_API_KEY = "990AnMyDMx2yyaxXpEVxzO5VtJSG3b6_JLnI"
-YEAR = "2024"
 BASE_URL = "https://api.setlist.fm/rest/1.0/search/setlists"
 
-HOT_VENUES = [
-    "Arena", "Stadium", "Dome", "小巨蛋", "大巨蛋", "世運", 
-    "流行音樂中心", "展覽館", "Legacy", "Zepp", "體育館", "體育場", "文化中心", "巨蛋"
-]
-
-def get_itunes_image(artist_name):
-    """兩全其美搜圖引擎 (嚴格比對 + 寬鬆保底)"""
-    clean_name = re.sub(r'\s*\(.*\)', '', artist_name).strip()
-    target_name_lower = clean_name.lower()
-    
-    strategies = [
-        {"params": f"term={quote(clean_name)}&entity=musicArtist&country=TW", "strict": True},
-        {"params": f"term={quote(clean_name)}&entity=album&country=TW", "strict": False},
-        {"params": f"term={quote(clean_name)}&entity=song&country=TW", "strict": False}
-    ]
-
+def get_itunes_image(artist_name, event_year):
+    clean_name = re.sub(r'\s*\(.*?\)', '', artist_name).strip()
     try:
-        for s in strategies:
-            search_url = f"https://itunes.apple.com/search?{s['params']}&limit=3"
-            time.sleep(0.6) 
-            response = requests.get(search_url, timeout=10)
-            if not response.ok: continue
-            data = response.json()
-
-            if data.get('resultCount', 0) > 0:
-                results = data['results']
-                if s['strict']:
-                    for item in results:
-                        returned_artist = item.get('artistName', '').lower()
-                        if target_name_lower in returned_artist or returned_artist in target_name_lower:
-                            img = item.get('artworkUrl100') or item.get('artworkUrl600')
-                            return img.replace("100x100bb", "600x600bb")
-                else:
-                    res = results[0]
-                    img = res.get('artworkUrl100') or res.get('artworkUrl600')
-                    return img.replace("100x100bb", "600x600bb")
-        
-        if "mayday" in target_name_lower:
-            return get_itunes_image("五月天")
+        url = f"https://itunes.apple.com/search?term={requests.utils.quote(clean_name)}&entity=musicArtist&country=TW"
+        res = requests.get(url, timeout=5).json()
+        if res.get('results'):
+            artist_id = res['results'][0]['artistId']
+            lookup = requests.get(f"https://itunes.apple.com/lookup?id={artist_id}&entity=album&limit=15").json()
+            albums = [a for a in lookup.get('results', []) if a.get('wrapperType') == 'collection']
+            for alb in albums:
+                rel_year = int(alb.get('releaseDate', '0000')[:4])
+                if rel_year <= int(event_year):
+                    return alb['artworkUrl100'].replace('100x100', '600x600')
     except: pass
-    return "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=1000"
+    return "https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?q=80&w=600"
 
-def main():
-    all_formatted_list = []
-    seen_performances = set()
-    current_page = 1
+def fetch_data():
     headers = {"Accept": "application/json", "x-api-key": SETLIST_API_KEY}
-    
-    print("="*60)
-    print(f"📡 LIVIBE 採集引擎 | 排序優化版 | 年份: {YEAR}")
-    print("="*60)
+    raw_list = []
+    print("🚀 啟動全量抓取 (2024-2026)...")
 
-    while True:
-        params = {"countryCode": "TW", "year": YEAR, "p": current_page}
-        try:
-            response = requests.get(BASE_URL, headers=headers, params=params)
-            if response.status_code == 429:
-                time.sleep(30); continue
-            if response.status_code != 200: break
+    for year in ["2024", "2025", "2026"]:
+        page = 1
+        while True:
+            res = requests.get(BASE_URL, headers=headers, params={"countryCode": "TW", "year": year, "p": page}).json()
+            if 'setlist' not in res: break
+            raw_list.extend(res['setlist'])
+            total_pages = (int(res.get('total', 0)) // 20) + 1
+            if page >= total_pages: break
+            page += 1
+            time.sleep(0.05)
 
-            data = response.json()
-            setlists = data.get('setlist', [])
-            if not setlists: break
+    # 1. 建立索引判定人數
+    vd_map = {}
+    for s in raw_list:
+        k = f"{s['eventDate']}_{s['venue']['name']}"
+        if k not in vd_map: vd_map[k] = set()
+        vd_map[k].add(s['artist']['name'])
 
-            for s in setlists:
-                artist = s['artist']['name']
-                venue = s['venue']['name']
-                date_str = s['eventDate'] # 格式: DD-MM-YYYY
-                
-                if any(hot in venue for hot in HOT_VENUES):
-                    perf_key = (artist, venue)
-                    if perf_key in seen_performances:
-                        print(f"  [SKIP] {artist} @ {venue}")
-                        continue
-                    
-                    print(f"✨ [NEW] {artist} @ {venue} ({date_str})")
-                    seen_performances.add(perf_key)
-                    
-                    # 💡 核心改進：轉換日期為 ISO 格式 (YYYY-MM-DD)，方便前端排序
-                    iso_date = datetime.strptime(date_str, "%d-%m-%Y").strftime("%Y-%m-%d")
-                    
-                    img_url = get_itunes_image(artist)
-                    
-                    all_formatted_list.append({
-                        "id": s['id'],
-                        "title": f"{artist} Live in Taiwan",
-                        "artist": artist,
-                        "date_range": date_str,
-                        "iso_date": iso_date, # 新增排序專用欄位
-                        "location": s['venue']['city']['name'],
-                        "venue": venue,
-                        "poster_url": img_url,
-                        "ticket_url": "#",
-                        "description": f"於 {venue} 舉行的現場演出。",
-                        "avg_score": 0.0,
-                        "reviews": []
-                    })
+    # 2. 分類邏輯 (優先級: Tour > Multi > Venue)
+    groups = {}
+    for s in raw_list:
+        tour = s.get('tour', {}).get('name')
+        v_name = s['venue']['name'].lower()
+        vd_key = f"{s['eventDate']}_{s['venue']['name']}"
+        is_multi = len(vd_map[vd_key]) >= 2
+        is_large = "stadium" in v_name or "dome" in v_name or "arena" in v_name
 
-            if current_page * 20 >= data.get('total', 0): break
-            current_page += 1
-            time.sleep(1.2)
+        if is_multi and tour: tag = "JOINT"
+        elif is_multi and not tour: tag = "VARIETY" if is_large else "FESTIVAL"
+        elif not is_multi and tour: tag = "TOUR"
+        else: tag = "SHOWCASE"
 
-        except Exception as e:
-            print(f"❌ 錯誤: {e}"); break
+        title = tour if tour else (f"{s['venue']['name']} Festival" if tag == "FESTIVAL" else f"{s['artist']['name']} Live")
+        
+        if title not in groups: groups[title] = {"items": [], "tag": tag}
+        groups[title]["items"].append(s)
 
-    # 存檔
-        output_name = 'data.json'
-    with open(output_name, 'w', encoding='utf-8') as f:
-        json.dump(all_formatted_list, f, ensure_ascii=False, indent=4)
-    
-    print("="*60)
-    print(f"✅ 成功導出 {len(all_formatted_list)} 筆資料！")
-    print("="*60)
+    # 3. 封裝 JSON
+    final = []
+    print("🎨 正在處理海報與分貝指數...")
+    for title, data in tqdm(groups.items()):
+        items = sorted(data["items"], key=lambda x: datetime.strptime(x['eventDate'], "%d-%m-%Y"))
+        tag = data["tag"]
+        
+        # 顯示名稱與分貝 (90-125dB)
+        display_artist = "多組藝人出演" if tag in ["JOINT", "FESTIVAL", "VARIETY"] else items[0]['artist']['name']
+        db_level = random.randint(95, 125)
+
+        day_info = {}
+        for i in items:
+            d = datetime.strptime(i['eventDate'], "%d-%m-%Y").strftime("%Y-%m-%d")
+            if d not in day_info: day_info[d] = set()
+            day_info[d].add(i['artist']['name'])
+
+        final.append({
+            "id": items[0]["id"],
+            "title": title,
+            "tag": tag,
+            "display_artist": display_artist,
+            "db": db_level,
+            "poster": get_itunes_image(items[0]['artist']['name'], items[0]['eventDate'].split('-')[-1]),
+            "start_date": datetime.strptime(items[0]['eventDate'], "%d-%m-%Y").strftime("%Y-%m-%d"),
+            "sessions": [{"id": i['id'], "date": i['eventDate'], "venue": i['venue']['name']} for i in items],
+            "all_artists": sorted(list(set(i['artist']['name'] for i in items))),
+            "performance_days": [{"date": d, "artists": sorted(list(a))} for d, a in day_info.items()]
+        })
+
+    with open('data.json', 'w', encoding='utf-8') as f:
+        json.dump(final, f, ensure_ascii=False, indent=4)
+    print(f"✅ 完成！共產出 {len(final)} 個活動項目。")
 
 if __name__ == "__main__":
-    main()
+    fetch_data()

@@ -1,162 +1,160 @@
-/* 全域設定 */
-* {
-    box-sizing: border-box;
+/* IMDB 核心配色 */
+:root {
+    --imdb-yellow: #F5C518;
+    --imdb-black: #000000;
+    --imdb-gray: #1A1A1A;
+    --imdb-text: #FFFFFF;
+    --imdb-muted: #A3A3A3;
 }
 
+/* 修正底色消失的問題 */
 body {
-    font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif;
-    background-color: #f4f7f6;
+    background-color: var(--imdb-black) !important;
+    color: var(--imdb-text) !important;
+    font-family: 'Roboto', Arial, sans-serif;
     margin: 0;
-    color: #333;
 }
 
-header {
-    background: linear-gradient(135deg, #1a1a1a 0%, #333 100%);
-    color: white;
-    padding: 2rem;
-    text-align: center;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+/* 導航欄樣式 */
+.navbar {
+    background-color: #121212;
+    padding: 15px 40px;
+    border-bottom: 1px solid #333;
 }
 
-/* 排序控制列 */
+.logo-box {
+    background-color: var(--imdb-yellow);
+    color: #000 !important;
+    font-weight: 900;
+    padding: 4px 8px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 1.2rem;
+}
+
+/* 修復網格排列 */
+.concert-grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 25px;
+    padding: 30px;
+    max-width: 1240px;
+    margin: 0 auto;
+}
+
+/* IMDB 卡片與動畫 */
+.concert-card {
+    background-color: var(--imdb-gray) !important;
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.3s cubic-bezier(0.2, 1, 0.3, 1), box-shadow 0.3s ease !important;
+}
+
+/* 滑鼠懸停動畫：位移 + 縮放 */
+.concert-card:hover {
+    transform: translateY(-10px) scale(1.02) !important;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.8);
+}
+
+.poster-wrapper img {
+    width: 100%;
+    aspect-ratio: 2/3;
+    object-fit: cover;
+    display: block;
+}
+
+.card-content { padding: 12px; }
+.card-title { font-weight: bold; font-size: 1rem; color: #fff; margin-bottom: 5px; }
+.card-artist { color: var(--imdb-muted); font-size: 0.85rem; }
+
+/* 標籤配色 */
+.fest-tag {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    padding: 3px 8px;
+    font-weight: 900;
+    font-size: 0.65rem;
+    border-radius: 2px;
+    z-index: 5;
+}
+.tag-festival { background: var(--imdb-yellow); color: #000; }
+.tag-tour { background: #0072EF; color: #fff; }
+.tag-showcase { background: #444; color: #fff; }
+
+/* --- 排序選單控制區塊 --- */
 .control-panel {
     max-width: 1200px;
-    margin: 30px auto;
-    padding: 0 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 15px;
+    margin: 20px auto;
+    padding: 10px 20px;
+    /*border-bottom: 1px solid #333; /* 加入一條細微的分隔線 */
 }
 
 .sort-group {
     display: flex;
     gap: 12px;
-    background: #fff;
-    padding: 10px 20px;
-    border-radius: 50px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-}
-
-.sort-label {
-    font-weight: bold;
-    color: #666;
-    align-self: center;
-}
-
-.sort-btn {
-    padding: 8px 20px;
-    border: 2px solid #eee;
-    background: white;
-    border-radius: 25px;
-    cursor: pointer;
-    font-size: 0.95rem;
-    font-weight: 500;
-    transition: all 0.3s ease;
-}
-
-.sort-btn:hover {
-    border-color: #007bff;
-    color: #007bff;
-}
-
-.sort-btn.active {
-    background: #007bff;
-    color: white;
-    border-color: #007bff;
-    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
-}
-
-/* 演唱會網格佈局 */
-.concert-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 30px;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px 50px;
-}
-
-/* 卡片與圖片樣式 */
-.concert-card {
-    background: white;
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.08);
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.concert-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 15px 30px rgba(0,0,0,0.12);
-}
-
-.poster-wrapper {
-    position: relative;
-    width: 100%;
-    height: 400px;
-    overflow: hidden;
-}
-
-.poster-wrapper img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-/* 文字資訊區 */
-.info {
-    padding: 20px;
-}
-
-.location-tag {
-    background: #f0f3ff;
-    color: #007bff;
-    font-size: 0.75rem;
-    font-weight: bold;
-    padding: 4px 12px;
-    border-radius: 6px;
-    display: inline-block;
-    margin-bottom: 10px;
-}
-
-h3 {
-    margin: 5px 0;
-    font-size: 1.25rem;
-    color: #222;
-    /* 避免標題太長擠壓佈局 */
-    display: -webkit-box;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-.venue {
-    color: #777;
-    font-size: 0.9rem;
-    margin-bottom: 15px;
-}
-
-.date-box {
-    border-top: 1px solid #eee;
-    padding-top: 15px;
-    color: #007bff;
-    font-weight: 600;
-    display: flex;
     align-items: center;
-    gap: 5px;
+    flex-wrap: wrap;
 }
 
-/* 手機版適應 */
-@media (max-width: 600px) {
-    .control-panel {
-        flex-direction: column;
-    }
-    .sort-group {
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-    .poster-wrapper {
-        height: 300px;
-    }
+/* 讓「排序方式」字樣更專業 */
+.sort-group::before {
+    content: "排序方式：";
+    color: var(--imdb-muted);
+    font-size: 0.9rem;
+    font-weight: bold;
+    margin-right: 5px;
 }
+
+/* IMDB 風格藥丸按鈕 */
+.sort-btn {
+    background-color: #1A1A1A; /* 深灰背景 */
+    color: var(--imdb-text);
+    border: 1px solid #333; /* 深色邊框 */
+    padding: 6px 16px;
+    border-radius: 20px; /* 圓角藥丸形狀 */
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+/* 懸停效果 */
+.sort-btn:hover {
+    background-color: #333;
+    border-color: #555;
+}
+
+/* 啟用狀態：IMDB 黃色邊框與文字 */
+.sort-btn.active {
+    background-color: transparent;
+    color: var(--imdb-yellow);
+    border-color: var(--imdb-yellow);
+}
+
+/* 標籤配色更新 */
+.tag-tour { 
+    background-color: #0072EF !important; /* 鮮豔的藍色 */
+    color: #ffffff !important; 
+}
+.tag-festival { 
+    background-color: var(--imdb-yellow) !important; 
+    color: #000 !important; 
+}
+.tag-showcase { 
+    background-color: #444 !important; 
+    color: #fff !important; 
+}
+
+/* 確保按鈕 active 狀態 */
+.sort-btn.active {
+    border-color: var(--imdb-yellow) !important;
+    color: var(--imdb-yellow) !important;
+}
+
+.tag-variety { background-color: #673AB7; color: #fff; }  /* 深紫色 */
+.tag-festival { background-color: #F5C518; color: #000; } /* 音樂祭黃 */
+.tag-tour { background-color: #2196F3; color: #fff; }     /* 巡演藍 */
+.tag-showcase { background-color: #4CAF50; color: #fff; }  /* 專場綠 */

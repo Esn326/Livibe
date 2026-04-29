@@ -2,30 +2,50 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LIVIBE - 演唱會評價平台</title>
+    <title>LIVIBE - 現場演出脈動</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
+    <nav class="navbar">
+        <a href="index.html" class="logo-box">LIVIBE</a>
+    </nav>
+<div class="control-panel" style="max-width:1200px; margin:20px auto; display:flex; gap:10px; padding:0 20px;">
+    <input type="text" id="search-input" placeholder="搜尋藝人或活動..." style="flex:2; padding:12px; background:#111; border:1px solid #333; color:#fff; border-radius:4px;">
+    <select id="filter-tag" style="flex:1; padding:12px; background:#111; border:1px solid #333; color:#fff;">
+        <option value="all">所有標籤</option>
+        <option value="TOUR">TOUR</option>
+        <option value="JOINT">JOINT</option>
+        <option value="FESTIVAL">FESTIVAL</option>
+        <option value="SHOWCASE">SHOWCASE</option>
+        <option value="VARIETY">VARIETY</option>
+    </select>
+    <select id="sort-order" style="flex:1; padding:12px; background:#111; border:1px solid #333; color:#fff;">
+        <option value="newest">最新</option>
+        <option value="oldest">最舊</option>
+    </select>
+</div>
+    <div class="control-panel">
+        <div class="sort-group">
+            <select id="filter-tag" class="sort-btn" style="appearance: none; text-align: center;">
+                <option value="ALL">全部類型</option>
+                <option value="tour">巡迴演唱會</option>
+                <option value="festival">音樂祭 / 跨年</option>
+                <option value="showcase">專場演出</option>
+                <option value="variety">職棒 / 體育</option>
+            </select>
+            
+            <input type="date" id="filter-date" class="sort-btn" style="color-scheme: dark;">
 
-<header>
-    <h1>LIVIBE</h1>
-    <p>發現台灣最精彩的現場演出</p>
-</header>
-
-<div class="control-panel">
-    <div class="sort-group">
-        <span class="sort-label">排序依據</span>
-        <button class="sort-btn active" data-sort="date">📅 演出時間</button>
-        <button class="sort-btn" data-sort="artist">🎤 藝人名稱</button>
-        <button class="sort-btn" data-sort="location">📍 場地地區</button>
+            <button class="sort-btn active" data-sort="date-desc">最新日期</button>
+            <button class="sort-btn" data-sort="date-asc">最舊日期</button>
+            <button class="sort-btn" data-sort="title">名稱排序</button>
+        </div>
     </div>
-</div>
 
-<div id="concert-grid" class="concert-grid">
-    <p style="text-align: center; grid-column: 1/-1;">正在尋找演出資料...</p>
-</div>
+    <div id="concert-grid" class="concert-grid">
+        </div>
 
-<script src="app.js"></script> 
+    <script src="main.js"></script>
 </body>
 </html>

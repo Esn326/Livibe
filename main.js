@@ -1,79 +1,50 @@
-/**
- * main.js - 首頁列表與排序搜尋邏輯
- */
-let allConcerts = []; // 儲存原始資料
-let filteredData = []; // 儲存過濾/排序後的資料
+let allEvents = [];
 
-document.addEventListener('DOMContentLoaded', () => {
-    fetch('data_2024_final.json')
-        .then(res => res.json())
-        .then(data => {
-            allConcerts = data;
-            filteredData = [...data];
-            // 預設執行日期排序
-            applyFiltersAndSort('date');
-        });
+async function init() {
+    const r = await fetch('data.json');
+    allEvents = await r.json();
 
-    // 監聽搜尋框 (假設 HTML ID 為 artistSearch)
-    const searchInput = document.getElementById('artistSearch');
-    if (searchInput) {
-        searchInput.addEventListener('input', (e) => {
-            const term = e.target.value.toLowerCase();
-            filteredData = allConcerts.filter(item => 
-                item.artist.toLowerCase().includes(term) || 
-                item.venue.toLowerCase().includes(term)
-            );
-            // 搜尋後保持當前的排序狀態
-            const activeSort = document.querySelector('.sort-btn.active')?.dataset.sort || 'date';
-            renderList(executeSort(filteredData, activeSort));
-        });
-    }
+    document.getElementById('search-input').addEventListener('input', applyFilters);
+    document.getElementById('filter-tag').addEventListener('change', applyFilters);
+    document.getElementById('sort-order').addEventListener('change', applyFilters);
 
-    // 監聽排序按鈕
-    document.querySelectorAll('.sort-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
-            e.target.classList.add('active');
-            const sortType = e.target.dataset.sort;
-            renderList(executeSort(filteredData, sortType));
-        });
-    });
-});
-
-// 排序執行器
-function executeSort(data, type) {
-    let result = [...data];
-    if (type === 'artist') {
-        result.sort((a, b) => a.artist.localeCompare(b.artist, 'zh-Hant'));
-    } else if (type === 'date') {
-        result.sort((a, b) => new Date(b.iso_date) - new Date(a.iso_date));
-    } else if (type === 'location') {
-        result.sort((a, b) => a.location.localeCompare(b.location, 'zh-Hant'));
-    }
-    return result;
+    applyFilters();
 }
 
-// 渲染 HTML
-function renderList(data) {
-    const container = document.getElementById('concert-grid');
-    if (!container) return;
-    
-    container.innerHTML = data.map(item => `
-        <div class="concert-card" onclick="goToDetail('${item.id}')">
-            <div class="poster-wrapper">
-                <img src="${item.poster_url}" alt="${item.artist}" loading="lazy">
-            </div>
-            <div class="info">
-                <span class="location-tag">${item.location}</span>
-                <h3>${item.artist}</h3>
-                <p class="venue">${item.venue}</p>
-                <p class="date">📅 ${item.date_range}</p>
+function applyFilters() {
+    const search = document.getElementById('search-input').value.toLowerCase();
+    const tag = document.getElementById('filter-tag').value;
+    const sort = document.getElementById('sort-order').value;
+
+    let filtered = allEvents.filter(item => {
+        const matchSearch = item.title.toLowerCase().includes(search) || 
+                            item.all_artists.some(a => a.toLowerCase().includes(search));
+        const matchTag = (tag === 'all' || item.tag === tag);
+        return matchSearch && matchTag;
+    });
+
+    filtered.sort((a, b) => {
+        const dA = new Date(a.start_date), dB = new Date(b.start_date);
+        return sort === 'newest' ? dB - dA : dA - dB;
+    });
+
+    render(filtered);
+}
+
+function render(events) {
+    const grid = document.getElementById('concert-grid');
+    grid.innerHTML = events.map(item => `
+        <div class="concert-card" onclick="location.href='concert.html?id=${item.id}'">
+            <div class="fest-tag tag-${item.tag.toLowerCase()}">${item.tag}</div>
+            <div class="poster-wrapper"><img src="${item.poster}"></div>
+            <div class="card-content">
+                <div class="card-title">${item.title}</div>
+                <div class="card-artist">${item.display_artist}</div>
+                <div class="card-artist" style="margin-top:8px;">
+                    📅 ${item.sessions.length > 1 ? item.start_date + ' 起' : item.start_date}
+                </div>
             </div>
         </div>
     `).join('');
 }
-
-// 跳轉功能
-function goToDetail(id) {
-    window.location.href = `detail.html?id=${id}`;
-}
+init();

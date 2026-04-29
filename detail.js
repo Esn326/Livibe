@@ -1,45 +1,61 @@
-/**
- * detail.js - 詳情頁讀取與評價顯示
- */
-document.addEventListener('DOMContentLoaded', () => {
-    const params = new URLSearchParams(window.location.search);
-    const concertId = params.get('id');
+async function loadDetail() {
+    const id = new URLSearchParams(window.location.search).get('id');
+    const r = await fetch('data.json');
+    const data = await r.json();
+    const item = data.find(i => i.id === id || i.sessions.some(s => s.id === id));
+    if (!item) return;
 
-    if (!concertId) {
-        window.location.href = 'index.html';
-        return;
-    }
+    // 渲染分貝標註
+    const dbHtml = `
+        <div style="display:flex; align-items:center; gap:10px; margin:15px 0; color:#F5C518;">
+            <span style="font-size:1.5rem;">🔊</span>
+            <span style="font-size:1.3rem; font-weight:900;">${item.db} dB</span>
+            <span style="color:#A3A3A3; font-size:0.8rem;">現場震撼度 (LIVIBE Volume)</span>
+        </div>
+    `;
 
-    fetch('data_2024_final.json')
-        .then(res => res.json())
-        .then(data => {
-            const concert = data.find(item => item.id === concertId);
-            if (concert) {
-                renderDetailView(concert);
-            } else {
-                alert('找不到演出資料');
-                window.location.href = 'index.html';
-            }
-        });
-});
-
-function renderDetailView(item) {
-    // 更新頁面上的元素 (需對應你的 detail.html ID)
-    const titleEl = document.getElementById('detail-title');
-    const artistEl = document.getElementById('detail-artist');
-    const posterEl = document.getElementById('detail-poster');
-    const infoEl = document.getElementById('detail-info');
-
-    if (titleEl) titleEl.innerText = item.title;
-    if (artistEl) artistEl.innerText = item.artist;
-    if (posterEl) posterEl.src = item.poster_url;
-    if (infoEl) {
-        infoEl.innerHTML = `
-            <p>📍 <strong>場地：</strong>${item.venue} (${item.location})</p>
-            <p>📅 <strong>日期：</strong>${item.date_range}</p>
-            <p>📝 <strong>簡介：</strong>${item.description}</p>
-        `;
-    }
+    document.getElementById('detail-poster').src = item.poster;
+    document.getElementById('detail-title').innerText = item.title;
+    document.getElementById('detail-title').insertAdjacentHTML('afterend', dbHtml);
     
-    // 這裡可以接你原本的評論區邏輯...
+    const tagEl = document.getElementById('tag-display');
+    tagEl.innerText = item.tag;
+    tagEl.className = `ui-tag tag-${item.tag.toLowerCase()}`;
+
+    const dateEl = document.getElementById('display-date');
+    const venueEl = document.getElementById('display-venue');
+    const mapEl = document.getElementById('display-map');
+    const sessionBox = document.querySelector('.session-box');
+    const dropdown = document.getElementById('session-dropdown');
+    const artistList = document.getElementById('artist-list');
+
+    const update = (s) => {
+        dateEl.innerText = s.date;
+        venueEl.innerText = s.venue;
+        mapEl.href = `http://googleusercontent.com/maps.google.com/?q=${encodeURIComponent(s.venue)}`;
+    };
+
+    update(item.sessions[0]);
+
+    if (item.tag === 'FESTIVAL' || item.tag === 'VARIETY') {
+        sessionBox.style.display = 'none';
+        artistList.innerHTML = `<h3>陣容名單</h3>` + item.performance_days.map(d => `
+            <div style="margin-bottom:20px; padding:15px; background:#1A1A1A; border-left:4px solid #F5C518;">
+                <strong style="color:#F5C518;">${d.date}</strong>
+                <ul style="list-style:none; padding:10px 0 0 5px;">
+                    ${d.artists.map(a => `<li style="color:#fff; margin-bottom:5px;">• ${a}</li>`).join('')}
+                </ul>
+            </div>
+        `).join('');
+    } else {
+        sessionBox.style.display = item.sessions.length > 1 ? 'block' : 'none';
+        if (item.sessions.length > 1) {
+            dropdown.innerHTML = item.sessions.map((s, i) => `<option value="${i}">${s.date} - ${s.venue}</option>`).join('');
+            dropdown.onchange = (e) => update(item.sessions[e.target.value]);
+        }
+        artistList.innerHTML = `<h3>演出藝人</h3><ul style="list-style:none; padding-left:5px;">
+            ${item.all_artists.map(a => `<li style="color:#fff; margin-bottom:8px;">• ${a}</li>`).join('')}
+        </ul>`;
+    }
 }
+loadDetail();
